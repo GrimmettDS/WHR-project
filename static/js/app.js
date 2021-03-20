@@ -1,6 +1,6 @@
-function optionChanged(id) {
-    updatePlotly2(id);
-    updateDemoInfo(id)
+function optionChanged(Country) {
+    updatePlotly2(Country);
+    updateDemoInfo(Country)
 };
 //When going to initial html page, creates function so pages loads on first dropdown
 function init() {
@@ -17,9 +17,9 @@ function init() {
     var freedom = data.map(x=> x.Freedom);
     var happiness = data.map(x=> x.Happiness_Score);
 
-    console.log(family);
-    console.log(freedom);
-    console.log(happiness);
+    //console.log(family);
+    //console.log(freedom);
+    //console.log(happiness);
 
 
     // Selecting Top Ten data
@@ -40,8 +40,8 @@ function init() {
     var first_ID = data[0];
     var sample_Meta = d3.select("#sample-metadata").selectAll('h1')
 
-    console.log(topten_family);
-    console.log(top_happiness);
+    //console.log(topten_family);
+    //console.log(top_happiness);
     
     var firstMetadata = sample_Meta.data(d3.entries(first_ID))
     firstMetadata.enter()
@@ -52,12 +52,12 @@ function init() {
   
     firstMetadata.exit().remove()
 
-    // Create bar chart trace and layout
+    // Create chart trace and layout
     var trace1 = {
-        x : top_happiness[0],
+        x : top_happiness[4],
         y : topten_family[0],
         text : top_freedom[0],
-        type : 'bar',
+        type : 'line',
         orientation : 'h',
         transforms: [{
             type: 'sort',
@@ -70,19 +70,17 @@ function init() {
         title : '<b>Happy / Family / Freedom</b><br>Testing'
     };
 
-    // Create bar chart
+    // Create chart
     var data = [trace1];
     var config = {responsive:true}
     Plotly.newPlot('bar', data, layout1,config);
-
-    
 
     });
 }; 
 
 init();
 
-// Bar chart update
+// Chart update
 function updatePlotly2(id) {
     d3.csv("2015.csv").then((data) => {
         var country_test = data.map(x => x.Country);
@@ -106,12 +104,12 @@ function updatePlotly2(id) {
         });
         var top_happiness = happiness.map(x => x.slice(0,10));
 
-        // Create Bar chart trace and layout
+        // Create chart trace and layout
         var trace = {
             x : family[0],
             y : happiness[0],
             text : freedom[0],
-            type : 'bar',
+            type : 'line',
             orientation : 'h',
             transforms: [{
                 type: 'sort',
@@ -131,15 +129,21 @@ function updatePlotly2(id) {
     });
 };
 // New ID selection update
-function updateDemoInfo(id) {
+function updateDemoInfo(NewCountry) {
     d3.csv("2015.csv").then((data) => {
-        var country_test = data.map(x => x.Country);
-        var metadataSamples = data.filter(x => x.Country === +country_test)[0];
+        //var Country = data.map(x => x.Country);
+        var dataSamples = data.filter(x => x.Country)[0];
+        console.log(dataSamples)
 
-        var sampleMetadata1 = d3.select("#sample-metadata").selectAll('h1')
-        var sampleMetadata = sampleMetadata1.data(d3.entries(metadataSamples))
-        sampleMetadata.enter().append('h1').merge(sampleMetadata).text(d => `${d.key} : ${d.value}`).style('font-size','12px');
-        console.log(sampleMetadata)
+        var sampledata1 = d3.select("#sample-metadata").selectAll('h1')
+        console.log(sampledata1)
+
+        var sampledata = sampledata1.data(d3.entries(dataSamples))
+        console.log(sampledata)
+        
+        sampledata.enter().append('h1').merge(sampledata).text(d => `${d.key} : ${d.value}`).style('font-size','12px');
+        console.log(sampledata)
+        var config = {responsive:true}
     });
 };
 
